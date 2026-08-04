@@ -71,12 +71,12 @@ cd amuse-2025.9.0
 Once AMUSE and the dependencies are installed, run the main simulation and light curve generator:
 
 ```bash
-python run_sim.py *txt_files.txt
+python run_sim.py input_sim.txt
 ```
 
 But if you are using the precomputed one, it will be:
 ```bash
-python run_sim.py --precompute *txt_files.txt
+python run_sim.py --precompute input_sim_precompute.txt
 ```
 
 ## Acknowledgements
