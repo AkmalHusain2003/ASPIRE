@@ -91,8 +91,8 @@ This project was carried out as part of the ASPIRE program at the University of 
 
 This project uses a **dual-license** scheme to distinguish between source code and research outputs:
 
-- **Source code** (simulation scripts, pipeline modules, analysis code) is licensed under the **MIT License** — see [LICENSE](LICENSE).
-- **Data and research results** (simulation output, light curve data, TTV fitting results, residual measurements, generated figures/plots) are licensed under **[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)** — see [LICENSE-DATA](LICENSE-DATA). You are free to share and adapt this material, including for commercial purposes, provided appropriate credit is given to the authors.
+- **Source code** (simulation scripts, pipeline modules, analysis code) is licensed under the **MIT License** — see [LICENSE](LICENSE). It is free to use, modify, and redistribute.
+- **Data and research results** (simulation output, light curve data, TTV fitting results, residual measurements, generated figures/plots) are **All Rights Reserved** — see [LICENSE-DATA](LICENSE-DATA). No use, reproduction, or redistribution of this data is permitted without prior written permission. To request permission, please contact **akmalhusain2003@gmail.com**.
 
 ## References
 
