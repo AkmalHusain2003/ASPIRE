@@ -83,6 +83,17 @@ python run_sim.py --precompute input_sim_precompute.txt
 
 This project was carried out as part of the ASPIRE program at the University of Amsterdam, under the supervision of Dr. Silvia Toonen and Dr. Tjarda C. N. Boekholt.
 
+## Acknowledgements
+
+This project was carried out as part of the ASPIRE program at the University of Amsterdam, under the supervision of Dr. Silvia Toonen and Dr. Tjarda C. N. Boekholt.
+
+## License
+
+This project uses a **dual-license** scheme to distinguish between source code and research outputs:
+
+- **Source code** (simulation scripts, pipeline modules, analysis code) is licensed under the **MIT License** — see [LICENSE](LICENSE).
+- **Data and research results** (simulation output, light curve data, TTV fitting results, residual measurements, generated figures/plots) are licensed under **[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)** — see [LICENSE-DATA](LICENSE-DATA). You are free to share and adapt this material, including for commercial purposes, provided appropriate credit is given to the authors.
+
 ## References
 
 - Mandel, K., & Agol, E. (2002). Analytic light curves for planetary transit searches. The Astrophysical Journal Letters, 580(2), L171–L175.
