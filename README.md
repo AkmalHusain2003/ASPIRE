@@ -2,7 +2,7 @@
 
 ## About ASPIRE (2026)
 
-ASPIRE (Astrophysics Summer Program for International Research Experience) at the University of Amsterdam is an 8-week research internship program designed to help young astronomers — particularly master's students — accelerate their research and technical skills.
+ASPIRE (Astrophysics Summer Program for International Research Experience) at the University of Amsterdam is an 8-week (for me from 18th June until 7th August 2026) research internship program designed to help young astronomers — particularly master's students — accelerate their research and technical skills.
 
 ## The Kepler-221 Exoplanet System
 
