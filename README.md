@@ -47,7 +47,7 @@ pip install amuse-huayno
 You will also need the standard scientific Python stack:
 
 ```bash
-pip install numpy scipy matplotlib astropy lightkurve
+pip install numpy scipy matplotlib astropy tqdm
 ```
 
 ### 3. Alternative: Install AMUSE from Source
