@@ -83,10 +83,6 @@ python run_sim.py --precompute input_sim_precompute.txt
 
 This project was carried out as part of the ASPIRE program at the University of Amsterdam, under the supervision of Dr. Silvia Toonen and Dr. Tjarda C. N. Boekholt.
 
-## Acknowledgements
-
-This project was carried out as part of the ASPIRE program at the University of Amsterdam, under the supervision of Dr. Silvia Toonen and Dr. Tjarda C. N. Boekholt.
-
 ## License
 
 This project uses a **dual-license** scheme to distinguish between source code and research outputs:
