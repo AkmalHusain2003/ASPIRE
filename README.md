@@ -15,7 +15,7 @@ To test this hypothesis, we use **Transit Timing Variations (TTVs)** to search f
 ## Our Pipeline
 
 1. **N-Body Simulation** — An [AMUSE](https://www.amusecode.org/) (Astrophysical Multipurpose Software Environment) pipeline drives the N-body integration, using an adaptive timestep to ensure the resulting light curve is smooth and free of numerical artifacts.
-2. **Geometric Conversion** — Geometric transformations project the 3D N-body simulation output onto the sky plane, converting positions into a 1D transit light curve.
+2. **Geometric Conversion** — Geometric transformations project the 2D N-body simulation output onto the sky plane, converting positions into a 1D transit light curve.
 3. **Limb Darkening** — The Mandel & Agol (2002) analytic transit model is used to incorporate limb darkening, producing physically realistic transit light curves.
 4. **Analysis** — The resulting light curves are analyzed for timing perturbations (TTVs) in the transiting planets, which would indicate the gravitational influence of the hypothetical planet f.
 
