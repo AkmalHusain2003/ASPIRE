@@ -1,24 +1,14 @@
 import numpy as np
 import shapely
 from amuse.units import units
-# import multiprocessing as mp
 
-# ---------------------------------------------------------------------------
-# EQUATIONS TO PRODUCE LIGHTCURVE
-# ---------------------------------------------------------------------------
 def calc_intensity(mu, u1, u2):
     """
-    Calculate the stellar surface intensity using the quadratic limb darkening law.
-    (Kopal 1950; Mandel & Agol 2002)
+    Mandel & Agol Quadratic Limb Darkening
     """
     return 1.0 - u1 * (1.0 - mu) - u2 * (1.0 - mu)**2
 
-
 def init_star(r_star, u1, u2, n_annuli=32):
-    """
-    Precompute the stellar annulus grid, intensity profile, and total luminosity.
-    Must be called once before entering the simulation time loop.
-    """
     r_edges = np.linspace(0.0, r_star, n_annuli + 1)
     
     r_mid = np.sqrt((r_edges[:-1]**2 + r_edges[1:]**2) / 2.0)
@@ -32,13 +22,7 @@ def init_star(r_star, u1, u2, n_annuli=32):
     
     return r_edges, intensity, l_total
 
-
 def calc_overlap_area(r_edges, r_planet, distance):
-    """
-    Calculate the cumulative overlapping area between transiting planets 
-    and stellar annulus boundaries simultaneously using full NumPy vectorization.
-    Supports both scalar distance and vectorized distance arrays.
-    """
     r_edges = np.asarray(r_edges)
     distance = np.asarray(distance)
 
@@ -69,11 +53,7 @@ def calc_overlap_area(r_edges, r_planet, distance):
         
     return area
 
-
 def calc_flux(r_planet, distance, r_edges, intensity, l_total):
-    """
-    Calculate the normalized flux for a single planet using fully vectorized operations.
-    """
     cum_overlap = calc_overlap_area(r_edges, r_planet, distance)
     annulus_overlap = np.diff(cum_overlap)
     
@@ -81,17 +61,9 @@ def calc_flux(r_planet, distance, r_edges, intensity, l_total):
     
     return 1.0 - (l_occulted / l_total)
 
-
 def calc_flux_total(star_center, transiting_planets, r_edges, intensity, l_total, quad_segs=8):
-    """
-    Calculate individual normalized fluxes and the combined total flux for all transiting planets.
-    Fully vectorized using NumPy for individual calculations and Shapely for mutual overlaps.
-    
-    Returns:
-    tuple: (individual_fluxes list, total_flux scalar)
-    """
     n_planets = len(transiting_planets)
-    sx, sy = star_center
+    sy, sz = star_center
     
     if n_planets == 0:
         return [], 1.0
@@ -99,7 +71,7 @@ def calc_flux_total(star_center, transiting_planets, r_edges, intensity, l_total
     centers = np.array([p[0] for p in transiting_planets])
     radii = np.array([p[1] for p in transiting_planets])
     
-    distances = np.sqrt((centers[:, 0] - sx)**2 + (centers[:, 1] - sy)**2)
+    distances = np.sqrt((centers[:, 0] - sy)**2 + (centers[:, 1] - sz)**2)
     
     individual_fluxes = [
         calc_flux(r, d, r_edges, intensity, l_total) 
@@ -127,11 +99,34 @@ def calc_flux_total(star_center, transiting_planets, r_edges, intensity, l_total
         
     return individual_fluxes, total_flux
 
+def prepare_light_curve_inputs(dataframes, planet_names=None):
+    r_sun_to_au = (1.0 | units.RSun).value_in(units.au)
+    r_earth_to_au = (1.0 | units.REarth).value_in(units.au)
 
-# ---------------------------------------------------------------------------
-# FUNCTION TO USE THE EQUATIONS TO GET THE LIGHTCURVE
-# ---------------------------------------------------------------------------
-def make_light_curve(R_S_au, R_P_au, n_planets, var_time, var_dx, var_dy,
+    if planet_names is None:
+        planet_names = [name for name in dataframes["attributes"].keys() if name != "star"]
+
+    R_S_au = dataframes["metadata"]["R_STAR_RSun"] * r_sun_to_au
+
+    R_P_au = []
+    var_dx = []
+    var_dy = []
+    var_dz = []
+    for name in planet_names:
+        radius_REarth = dataframes["attributes"][name]["radius_REarth"]
+        R_P_au.append(radius_REarth * r_earth_to_au)
+
+        planet_df = dataframes[name]
+        var_dx.append(np.asarray(planet_df["dx_au"]))
+        var_dy.append(np.asarray(planet_df["dy_au"]))
+        var_dz.append(np.asarray(planet_df["dz_au"]))
+
+    var_time = np.asarray(dataframes["time"]["time_days"])
+    n_planets = len(planet_names)
+
+    return R_S_au, R_P_au, n_planets, var_time, var_dx, var_dy, var_dz, planet_names
+
+def make_light_curve(R_S_au, R_P_au, n_planets, var_time, var_dx, var_dy, var_dz,
                       u1_LD=0.5090, u2_LD=0.1925, n_annuli=32, quad_segs=8):
     r_edges, intensity, l_total = init_star(R_S_au, u1_LD, u2_LD, n_annuli=n_annuli)
 
@@ -141,13 +136,15 @@ def make_light_curve(R_S_au, R_P_au, n_planets, var_time, var_dx, var_dy,
     for k in range(len(var_time)):
         dxs = [var_dx[i][k] for i in range(n_planets)]
         dys = [var_dy[i][k] for i in range(n_planets)]
+        dzs = [var_dz[i][k] for i in range(n_planets)]
 
         transiting_planets = []
         transiting_indices = []
 
         for i in range(n_planets):
-            if dxs[i] > 0 and abs(dys[i]) < (R_S_au + R_P_au[i]):
-                transiting_planets.append(((0.0, dys[i]), R_P_au[i]))
+            rho_i = np.sqrt(dys[i]**2 + dzs[i]**2)
+            if dxs[i] > 0 and rho_i < (R_S_au + R_P_au[i]):
+                transiting_planets.append(((dys[i], dzs[i]), R_P_au[i]))
                 transiting_indices.append(i)
 
         ind_fluxes, flux_total = calc_flux_total(

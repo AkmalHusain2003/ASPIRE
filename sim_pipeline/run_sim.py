@@ -1,12 +1,8 @@
 import argparse
 from pathlib import Path
-from .io import load_input_file, load_precomputed_input_file, save_to_hdf5
+from .io import load_input_file, load_precomputed_input_file
 from .sim_core import run_simulation 
 
-
-# ---------------------------------------------------------------------------
-# USER COULD CHOOSE THE REGULAR INPUT OR THE PRECOMPUTED ONE
-# ---------------------------------------------------------------------------
 def main():
     parser = argparse.ArgumentParser(
         description="N-body transit simulation from a .txt input file"
@@ -34,11 +30,13 @@ def main():
         output_path = input_path.with_suffix(".h5")
 
     print(f"Running simulation -> output: {output_path}")
-    results = run_simulation(params, output_path, is_precomputed_params=args.precomputed)
+    run_info = run_simulation(params, output_path, is_precomputed_params=args.precomputed)
 
-    save_to_hdf5(results, params, output_path)
-    print(f"\nDone. Results saved to: {output_path}")
-
+    print(
+        f"\nDone. {run_info['n_steps_saved']} steps saved to: {run_info['output_path']} "
+        f"(runtime: {run_info['runtime_seconds']:.2f} s, "
+        f"max |dE/E0|: {run_info['max_energy_error']:.3e})"
+    )
 
 if __name__ == "__main__":
     main()

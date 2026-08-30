@@ -4,6 +4,7 @@ from .io import (
     save_to_hdf5,
     package_results,
     read_result,
+    open_streaming_writer,
 )
 
 from .sim_core import (
@@ -19,6 +20,7 @@ from .light_curve import (
     calc_overlap_area,
     calc_flux,
     calc_flux_total,
+    prepare_light_curve_inputs,
     make_light_curve,
 )
 
@@ -28,6 +30,7 @@ __all__ = [
     "save_to_hdf5",
     "package_results",
     "read_result",
+    "open_streaming_writer",
     "kepler_period",
     "Make_Exoplanet_System",
     "Make_Exoplanet_System_Precomputed",
@@ -37,5 +40,6 @@ __all__ = [
     "calc_overlap_area",
     "calc_flux",
     "calc_flux_total",
+    "prepare_light_curve_inputs",
     "make_light_curve",
 ]
